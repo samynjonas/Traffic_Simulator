@@ -54,7 +54,5 @@ public class WaypointEditor
                 Gizmos.DrawLine(waypoint.transform.position, branch.transform.position);
             }
         }
-
     }
-
 }

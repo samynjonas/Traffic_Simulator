@@ -168,8 +168,8 @@ public class WaypointManagerWindow : EditorWindow
 
         waypoint.transform.position = branchedFrom.transform.position;
         waypoint.transform.forward = branchedFrom.transform.forward;
+        waypoint.width = branchedFrom.width;
 
         Selection.activeGameObject = waypoint.gameObject;
-
     }
 }

@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class WaypointNavigator : MonoBehaviour
 {
+    //This controls what the next waypoint will be
+
     CharacterNavigationController controller;
 
     public Waypoint currentWaypoint;
 
-    int direction;
+    public bool _RandomizedDirection = true;
+    int direction = 0;
 
     private void Awake()
     {
@@ -18,7 +21,10 @@ public class WaypointNavigator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        direction = Mathf.RoundToInt(Random.Range(0f, 1f));
+        if(_RandomizedDirection)
+        {
+            direction = Mathf.RoundToInt(Random.Range(0f, 1f));
+        }
 
         controller.SetDestination(currentWaypoint.GetPosition());
     }
@@ -30,17 +36,21 @@ public class WaypointNavigator : MonoBehaviour
         {
             bool shouldBranch = false;
 
+            //If there is a branch on the waypoint
             if(currentWaypoint.branches != null && currentWaypoint.branches.Count > 0) 
             { 
+                //Decide if the npc should branch or not depending on the branchRatio
                 shouldBranch = Random.Range(0, 1f) <= currentWaypoint.branchRatio ? true : false;
             }
 
             if(shouldBranch) 
             {
-                currentWaypoint = currentWaypoint.branches[Random.Range(0, currentWaypoint.branches.Count - 1)];
+                //If it should branch - the next waypoint is a random branched waypoint
+                currentWaypoint = currentWaypoint.branches[Random.Range(0, currentWaypoint.branches.Count)];
             }
             else
             {
+                //Check which direction the npc is going
                 if (direction == 0)
                 {
                     if(currentWaypoint.nextWaypoint != null) 
@@ -65,9 +75,7 @@ public class WaypointNavigator : MonoBehaviour
                         direction = 0;
                     }
                 }
-            }
-
-            
+            }            
 
             controller.SetDestination(currentWaypoint.GetPosition());
         }
