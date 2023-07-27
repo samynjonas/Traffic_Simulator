@@ -12,7 +12,7 @@ public class TrafficLight_Script : MonoBehaviour
         Green
     }
 
-    private TrafficLightStates _TrafficLightState;
+    public TrafficLightStates _TrafficLightState;
 
     [SerializeField]
     private Light_Script _RedLight;
@@ -73,53 +73,6 @@ public class TrafficLight_Script : MonoBehaviour
             _TrafficLightState = (TrafficLightStates)stateAsInt;
 
             UpdateLights();
-
-            //Update the traffic light
-            UpdateWaitingCarState();
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other != null)
-        {
-            if(_WaitingCar == null)
-            {
-                Debug.Log("Car added");
-
-                _WaitingCar = other.gameObject.GetComponent<Vehicle_Script>();
-                UpdateWaitingCarState();
-            }            
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if(other != null) 
-        {
-            Debug.Log("Car removed");
-            if(other.gameObject == _WaitingCar.gameObject)
-            {
-                _WaitingCar = null;
-            }
-        }
-    }
-
-
-    void UpdateWaitingCarState()
-    {
-        if(_WaitingCar == null)
-        {
-            return;
-        }
-
-        if(_TrafficLightState == TrafficLightStates.Green)
-        {
-            _WaitingCar.SetCanDrive(true);
-        }
-        else
-        {
-            _WaitingCar.SetCanDrive(false);
         }
     }
 

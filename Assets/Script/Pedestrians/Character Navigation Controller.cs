@@ -1,46 +1,71 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterNavigationController : MonoBehaviour
 {
     [SerializeField]
-    Vector3 _Destination;
-    Vector3 _LastPosition;
+    protected Vector3 _Destination;
+    protected Vector3 _LastPosition;
 
-    Vector3 _Velocity;
+    protected Vector3 _Velocity;
 
     [SerializeField]
     public bool _ReachedDestination = false;
 
     [SerializeField]
-    float _StopDistance;
+    protected float _StopDistance;
 
     [SerializeField]
-    float _RotationSpeed;
+    protected float _RotationSpeed;
 
     [SerializeField]
-    float _MovementSpeed;
+    protected float _SpeedLimit;
+
+    protected float _MaxMovementSpeed;
+    protected float _MaxAngleSpeed;
+
+    protected float _MovementSpeed;
+
+    [SerializeField]
+    protected float _AccelerationSpeed;
+
+    [SerializeField]
+    protected float _DecelerationSpeed;
+
+    [SerializeField]
+    protected float _MaxAngleChange;
 
     // Start is called before the first frame update
     void Start()
     {
-        _MovementSpeed += Random.Range(-0.25f, 0.25f);
+        SetSpeedLimit(_SpeedLimit);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(transform.position != _Destination)
+        CalculateSpeed();
+        UpdateNavigation();
+    }
+
+    protected void UpdateNavigation()
+    {
+        if (transform.position != _Destination)
         {
             Vector3 destinationDirection = _Destination - transform.position;
             destinationDirection.y = 0;
 
             float destinationDistance = destinationDirection.magnitude;
-            if(destinationDistance >= _StopDistance) 
+            if (destinationDistance >= _StopDistance)
             {
                 _ReachedDestination = false;
                 Quaternion targetRotation = Quaternion.LookRotation(destinationDirection);
+
+                CheckForAngle(targetRotation);
+
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _RotationSpeed * Time.deltaTime);
                 transform.Translate(Vector3.forward * _MovementSpeed * Time.deltaTime);
             }
@@ -48,17 +73,6 @@ public class CharacterNavigationController : MonoBehaviour
             {
                 _ReachedDestination = true;
             }
-
-            _Velocity = (transform.position - _LastPosition) / Time.deltaTime;
-            _Velocity.y = 0;
-
-            var velocityMagnitude = _Velocity.magnitude;
-            
-            _Velocity = _Velocity.normalized;
-
-            var fwdDotProduct = Vector3.Dot(transform.forward, _Velocity);
-            var rightDotProduct = Vector3.Dot(transform.right, _Velocity);
-
         }
     }
 
@@ -66,6 +80,52 @@ public class CharacterNavigationController : MonoBehaviour
     {
         this._Destination = destination;
         _ReachedDestination = false;
+    }
+
+    protected void CalculateSpeed()
+    {
+        if(_MovementSpeed < _MaxMovementSpeed) 
+        {
+            _MovementSpeed += _AccelerationSpeed;
+            if(_MovementSpeed > _MaxMovementSpeed)
+            {
+                _MovementSpeed = _MaxMovementSpeed;
+            }
+        }
+        else if(_MovementSpeed > _MaxMovementSpeed)
+        {
+            _MaxMovementSpeed -= _DecelerationSpeed;
+            if(_MovementSpeed < _MaxMovementSpeed)
+            {
+                _MovementSpeed = _MaxMovementSpeed;
+            }
+        }
+    }
+
+    public void SetSpeedLimit(float maxSpeed)
+    {
+        _SpeedLimit = maxSpeed;
+
+        _MaxAngleSpeed = maxSpeed * 0.35f;
+
+        _MaxMovementSpeed = _SpeedLimit;
+    }
+
+    private void CheckForAngle(Quaternion targetRotation)
+    {
+        float targetAngle = targetRotation.eulerAngles.y;
+        float currentAngle = transform.eulerAngles.y;
+
+        float angleChange = Mathf.Abs(targetAngle - currentAngle);
+
+        if(angleChange > _MaxAngleChange)
+        {
+            _MaxMovementSpeed = _MaxAngleSpeed;
+        }
+        else
+        {
+            _MaxMovementSpeed = _SpeedLimit;
+        }
     }
 
 }
