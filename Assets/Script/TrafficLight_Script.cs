@@ -8,7 +8,7 @@ public class TrafficLight_Script : MonoBehaviour
     public enum TrafficLightStates
     {
         Red, 
-        Orange, 
+        //Orange, 
         Green
     }
 
@@ -47,9 +47,9 @@ public class TrafficLight_Script : MonoBehaviour
             case TrafficLightStates.Red:
                 _RedLight.SetLightState(true);
             break;
-            case TrafficLightStates.Orange:
-                _OrangeLight.SetLightState(true);
-            break;
+            //case TrafficLightStates.Orange:
+            //    _OrangeLight.SetLightState(true);
+            //break;
             case TrafficLightStates.Green:
                 _GreenLight.SetLightState(true);
             break;
