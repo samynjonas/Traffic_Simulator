@@ -6,6 +6,8 @@ using UnityEditor;
 [InitializeOnLoad()]
 public class WaypointEditor
 {
+    //Visuals of the waypoints
+
     [DrawGizmo(GizmoType.NonSelected | GizmoType.Selected | GizmoType.Pickable)]
     public static void OnDrawSceneGizmo(Waypoint waypoint, GizmoType gizmoType)
     {
@@ -24,7 +26,6 @@ public class WaypointEditor
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(waypoint.transform.position + (waypoint.transform.right * waypoint.width / 2f),
             waypoint.transform.position - (waypoint.transform.right * waypoint.width / 2f));
-
 
         if(waypoint.previousWaypoint != null)
         {

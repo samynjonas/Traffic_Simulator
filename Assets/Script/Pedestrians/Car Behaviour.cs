@@ -99,7 +99,6 @@ public class CarBehaviour : CharacterNavigationController
         }
     }
 
-
     void Braking()
     {
         if (_MovementSpeed > 0)

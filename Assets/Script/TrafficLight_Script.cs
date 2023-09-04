@@ -32,7 +32,7 @@ public class TrafficLight_Script : MonoBehaviour
 
     private void Start()
     {
-        _TrafficLightState = TrafficLightStates.Red;
+        //_TrafficLightState = TrafficLightStates.Red;
         UpdateLights();
     }
 

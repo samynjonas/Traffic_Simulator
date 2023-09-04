@@ -10,6 +10,9 @@ public class CharacterNavigationController : MonoBehaviour
     protected Vector3 _Destination;
     protected Vector3 _LastPosition;
 
+    protected float _Distance;
+
+
     protected Vector3 _Velocity;
 
     [SerializeField]
@@ -59,6 +62,7 @@ public class CharacterNavigationController : MonoBehaviour
             destinationDirection.y = 0;
 
             float destinationDistance = destinationDirection.magnitude;
+
             if (destinationDistance >= _StopDistance)
             {
                 _ReachedDestination = false;
@@ -76,9 +80,20 @@ public class CharacterNavigationController : MonoBehaviour
         }
     }
 
+    private int WaypointPercentage(float currDistance)
+    {
+        float percentage = currDistance / _Distance;
+        return (int)((1 - percentage) * 100);
+    }
+
     public void SetDestination(Vector3 destination)
     {
         this._Destination = destination;
+
+        Vector3 destinationDirection = _Destination - transform.position;
+        destinationDirection.y = 0;
+        this._Distance = destinationDirection.magnitude;
+
         _ReachedDestination = false;
     }
 
@@ -127,5 +142,4 @@ public class CharacterNavigationController : MonoBehaviour
             _MaxMovementSpeed = _SpeedLimit;
         }
     }
-
 }
