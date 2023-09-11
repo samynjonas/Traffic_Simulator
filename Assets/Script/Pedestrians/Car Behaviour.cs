@@ -37,7 +37,7 @@ public class CarBehaviour : CharacterNavigationController
             break;
         }
 
-        Debug.Log("Speed: " + _MovementSpeed);
+        //Debug.Log("Speed: " + _MovementSpeed);
     }
 
     void UpdateParkedState()
